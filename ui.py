@@ -51,6 +51,7 @@ class OUTFITSTUDIO_PT_MainPanel(bpy.types.Panel):
         col.label(text="Base Character", icon='OUTLINER_OB_ARMATURE')
         box = col.box()
         box.prop(settings, "base_collection", text="Base Collection")
+        box.prop(settings, "include_base", text="Include Base")
         
         layout.separator()
 

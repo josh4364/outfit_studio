@@ -89,8 +89,15 @@ class OUTFITSTUDIO_OT_BatchExport(bpy.types.Operator):
             # B. Export Outfits
             for outfit in settings.outfits:
                 if outfit.enabled and outfit.collection:
-                    struct_names = [obj.name for obj in settings.base_collection.all_objects 
-                                    if obj.type != 'MESH' and obj.name not in all_outfit_objects_names]
+                    if settings.include_base:
+                        # Include base meshes that aren't part of any specific outfit collection
+                        struct_names = [obj.name for obj in settings.base_collection.all_objects 
+                                        if obj.name not in all_outfit_objects_names]
+                    else:
+                        # Exclude all meshes from base collection (default behavior)
+                        struct_names = [obj.name for obj in settings.base_collection.all_objects 
+                                        if obj.type != 'MESH' and obj.name not in all_outfit_objects_names]
+                    
                     outfit_mesh_names = [obj.name for obj in outfit.collection.all_objects if obj.type == 'MESH']
                     
                     target_names = get_hierarchy_names(struct_names + outfit_mesh_names)

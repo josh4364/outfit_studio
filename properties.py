@@ -31,6 +31,12 @@ class OutfitStudioSettings(bpy.types.PropertyGroup):
         type=bpy.types.Collection,
         description="Collection containing the base model and armature"
     )
+
+    include_base: bpy.props.BoolProperty(
+        name="Include Base Meshes",
+        description="Include meshes from the base collection in outfit exports",
+        default=False
+    )
     
     outfits: bpy.props.CollectionProperty(
         type=OutfitStudioOutfitItem,
