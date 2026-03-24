@@ -37,6 +37,12 @@ class OutfitStudioSettings(bpy.types.PropertyGroup):
         description="Include meshes from the base collection in outfit exports",
         default=False
     )
+
+    gather_fbx_textures: bpy.props.BoolProperty(
+        name="Gather FBX Textures",
+        description="Copy textures to a 'textures' folder when exporting to FBX",
+        default=True
+    )
     
     outfits: bpy.props.CollectionProperty(
         type=OutfitStudioOutfitItem,

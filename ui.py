@@ -38,6 +38,7 @@ class OUTFITSTUDIO_PT_MainPanel(bpy.types.Panel):
         # Helper to open standard exporter for configuration
         if settings.export_format == 'FBX':
             row.operator("export_scene.fbx", text="", icon='PREFERENCES').filepath = "temp"
+            box.prop(settings, "gather_fbx_textures", text="Gather FBX Textures")
         else:
             # Both GLB and GLTF_EMBEDDED use the same GLTF exporter UI
             row.operator("export_scene.gltf", text="", icon='PREFERENCES').filepath = "temp"

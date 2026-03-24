@@ -189,7 +189,10 @@ class OUTFITSTUDIO_OT_BatchExport(bpy.types.Operator):
                 use_selection=True
             )
         else:
-            self.copy_textures(objects_to_export, export_abs_path)
+            settings = context.scene.outfit_studio
+            if settings.gather_fbx_textures:
+                self.copy_textures(objects_to_export, export_abs_path)
+            
             bpy.ops.export_scene.fbx(
                 'EXEC_DEFAULT',
                 filepath=filepath,
