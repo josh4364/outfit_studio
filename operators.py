@@ -84,7 +84,7 @@ class OUTFITSTUDIO_OT_BatchExport(bpy.types.Operator):
             base_objs_names = [obj.name for obj in settings.base_collection.all_objects 
                                if obj.name not in all_outfit_objects_names]
             self.export_with_temp_scene(context, base_name, get_hierarchy_names(base_objs_names), 
-                                        main_armature_name, export_abs_path, export_format)
+                                        main_armature_name, export_abs_path, export_format, settings.gather_fbx_textures)
 
             # B. Export Outfits
             for outfit in settings.outfits:
@@ -104,7 +104,7 @@ class OUTFITSTUDIO_OT_BatchExport(bpy.types.Operator):
                     file_name = f"{base_name}-{outfit.collection.name}"
                     
                     self.export_with_temp_scene(context, file_name, target_names, 
-                                                main_armature_name, export_abs_path, export_format)
+                                                main_armature_name, export_abs_path, export_format, settings.gather_fbx_textures)
 
             self.report({'INFO'}, "Bulk Export Complete!")
             
@@ -118,7 +118,7 @@ class OUTFITSTUDIO_OT_BatchExport(bpy.types.Operator):
             
         return {'FINISHED'}
 
-    def export_with_temp_scene(self, context, file_name, object_names, armature_name, export_abs_path, export_format):
+    def export_with_temp_scene(self, context, file_name, object_names, armature_name, export_abs_path, export_format, gather_fbx_textures):
         # Create a completely empty new scene
         temp_scene = bpy.data.scenes.new(name="OS_Temp_Export")
         context.window.scene = temp_scene
@@ -139,7 +139,7 @@ class OUTFITSTUDIO_OT_BatchExport(bpy.types.Operator):
             context.view_layer.objects.active = main_armature
 
         # RUN THE ACTUAL EXPORT
-        self.run_export(context, file_name, linked_objs, export_abs_path, export_format)
+        self.run_export(context, file_name, linked_objs, export_abs_path, export_format, gather_fbx_textures)
         
         # Cleanup: Delete the temp scene
         bpy.data.scenes.remove(temp_scene)
@@ -162,7 +162,7 @@ class OUTFITSTUDIO_OT_BatchExport(bpy.types.Operator):
                                 seen_paths.add(img_path)
                             except: pass
 
-    def run_export(self, context, file_name, objects_to_export, export_abs_path, export_format):
+    def run_export(self, context, file_name, objects_to_export, export_abs_path, export_format, gather_fbx_textures):
         if export_format == 'FBX':
             extension = ".fbx"
         elif export_format == 'GLTF_SEPARATE':
@@ -189,8 +189,7 @@ class OUTFITSTUDIO_OT_BatchExport(bpy.types.Operator):
                 use_selection=True
             )
         else:
-            settings = context.scene.outfit_studio
-            if settings.gather_fbx_textures:
+            if gather_fbx_textures:
                 self.copy_textures(objects_to_export, export_abs_path)
             
             bpy.ops.export_scene.fbx(
