@@ -46,6 +46,7 @@ class OutfitStudioSettings(bpy.types.PropertyGroup):
         name="Export Format",
         items=[
             ('GLB', "GLB (.glb)", "Export as GLTF binary"),
+            ('GLTF_SEPARATE', "GLTF Separate (.gltf)", "Export as GLTF with separate .bin and textures (useful for debugging)"),
             ('FBX', "FBX (.fbx)", "Export as FBX"),
         ],
         default='GLB'

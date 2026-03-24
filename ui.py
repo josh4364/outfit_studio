@@ -31,7 +31,18 @@ class OUTFITSTUDIO_PT_MainPanel(bpy.types.Panel):
         box = col.box()
         box.prop(settings, "base_name")
         box.prop(settings, "export_dir")
-        box.prop(settings, "export_format")
+        
+        row = box.row(align=True)
+        row.prop(settings, "export_format", text="Format")
+        
+        # Helper to open standard exporter for configuration
+        if settings.export_format == 'FBX':
+            row.operator("export_scene.fbx", text="", icon='PREFERENCES').filepath = "temp"
+        else:
+            # Both GLB and GLTF_EMBEDDED use the same GLTF exporter UI
+            row.operator("export_scene.gltf", text="", icon='PREFERENCES').filepath = "temp"
+            
+        box.label(text="Settings will be inherited from the standard exporter.", icon='INFO')
         
         layout.separator()
 
@@ -72,5 +83,6 @@ def register():
     bpy.utils.register_class(OUTFITSTUDIO_PT_MainPanel)
 
 def unregister():
-    bpy.utils.unregister_class(OUTFITSTUDIO_PT_MainPanel)
-    bpy.utils.unregister_class(OUTFITSTUDIO_UL_OutfitList)
+    unregister_classes = [OUTFITSTUDIO_UL_OutfitList, OUTFITSTUDIO_PT_MainPanel]
+    for cls in unregister_classes:
+        bpy.utils.unregister_class(cls)
